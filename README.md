@@ -1,15 +1,16 @@
-CDs Remixados
+Habbo Music (CDs Remixados)
 
-Depósito de CDs: um app simples para controlar os CDs remixados do Habbo, quanto foi gasto em cada um, quanto foi vendido e qual foi o lucro.
+Depósito de CDs: um app simples para controlar os CDs remixados do Habbo, quanto foi gasto em cada um, quanto foi vendido e qual foi o lucro. O visual lembra o Habbo Hotel: estante de discos estilo inventário e painel no estilo do Playlist Editor.
 
 Site: https://gabrielcidro.github.io/cds-remixados/
 
 O que dá para fazer
 Adicionar CDs com nome, quantidade e valor pago (em créditos, c)
+Selecionar um disco na estante e ajustar ali mesmo o preço, a quantidade e o status (na estante ou vendido)
+Registrar a venda (valor de venda e quantas unidades foram vendidas) e ver o lucro na hora
 Ver o total gasto, o total vendido e o lucro, em créditos e em reais
-Registrar a venda de cada CD (valor de venda e quantas unidades foram vendidas)
-Buscar, filtrar (todos, tenho, vendidos) e ordenar (recentes, mais caros, mais baratos, A-Z, maior lucro)
-Anexar um áudio ou um link da música em cada CD e ouvir clicando no vinil
+Buscar, filtrar (todos, na estante, vendidos) e ordenar (recentes, mais caros, mais baratos, A-Z, maior lucro)
+Anexar um áudio ou um link da música em cada CD e tocar "no quarto"
 Fazer backup e importar a lista
 
 A conversão usa 50c = R$ 11,50.
@@ -27,8 +28,8 @@ Como rodar
 
 Tecnologias
 
-HTML, CSS e JavaScript puros, em um único arquivo.
+HTML, CSS e JavaScript puros, em um único arquivo (as imagens vão embutidas nele).
 
 Aviso
 
-Projeto de fã, sem ligação com o Habbo ou com a Sulake.
+Projeto de fã, sem ligação com o Habbo ou com a Sulake. Habbo é marca registrada da Sulake Oy.
