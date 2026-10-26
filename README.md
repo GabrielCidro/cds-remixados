@@ -18,7 +18,7 @@ Fã-site da comunidade de CDs remixados do Habbo: uma estante para controlar seu
 - Anúncios só em créditos do Habbo, com nome do CD, DJ, preço e print do inventário
 - Login com Discord; o nick do Habbo é confirmado por um código colocado na missão
 - **Negociar** abre o Discord de quem está vendendo
-- **Ouvir** leva ao Discord do Alynva: use `/find`, escolha Habbo BR e cole o nome da música
+- **Ouvir** leva ao Discord do traxmachine.com: use `/find`, escolha Habbo BR e cole o nome da música
 - A moderação aprova os prints (selo "CD verificado"), recebe denúncias, remove anúncios, bane contas e ajusta o limite de anúncios por pessoa (padrão: 10 ativos)
 - Nenhuma venda acontece no site: ele só mostra os anúncios e leva as pessoas até o Discord
 

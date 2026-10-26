@@ -565,7 +565,7 @@ textarea.mono{font:12px ui-monospace,Menlo,monospace}
         <div class="step"><i>1</i><b>Entre com o Discord</b><p>Sem criar senha. Sua estante passa a ficar salva na sua conta e seu Discord vira o contato oficial dos seus anúncios.</p></div>
         <div class="step"><i>2</i><b>Confirme seu nick</b><p>O site gera um código. Coloque na sua missão do Habbo e pronto: seu nick fica com o selo de verificado.</p></div>
         <div class="step"><i>3</i><b>Anuncie com print</b><p>Escolha um CD da sua estante ou preencha nome, DJ e preço em créditos, junto com um print do CD no seu inventário.</p></div>
-        <div class="step"><i>4</i><b>Negocie no Discord</b><p>Quem quiser comprar clica em <b>Negociar</b> e fala direto com você. Para ouvir antes, o botão <b>Ouvir</b> leva ao Discord do Alynva.</p></div>
+        <div class="step"><i>4</i><b>Negocie no Discord</b><p>Quem quiser comprar clica em <b>Negociar</b> e fala direto com você. Para ouvir antes, o botão <b>Ouvir</b> leva ao Discord do traxmachine.com.</p></div>
       </div>
     </section>
   </section>
@@ -725,18 +725,18 @@ function copyText(t){
     let ok=false;try{ok=document.execCommand('copy')}catch(x){}ta.remove();if(!ok)throw 0;
   });
 }
-// Ouvir: copia o nome e explica como achar a música no bot do Discord do Alynva
-const ALYNVA='https://discord.gg/TDDrdxGt5';
+// Ouvir: copia o nome e explica como achar a música no bot do Discord do traxmachine.com
+const TRAX_DISCORD='https://discord.gg/TDDrdxGt5';
 function listenSheet(name,seed){
   const n=mk('div'),h=mk('div','ls-h'),t=mk('div'),st=mk('div','ls-ok');
   t.append(mk('b',null,name),st);h.append(disc(seed||0),t);
   const cp=()=>copyText(name).then(()=>{st.className='ls-ok';st.innerHTML=icon('i-check');st.append('Nome copiado!')}).catch(()=>{st.className='ls-ok bad';st.textContent='Não deu para copiar sozinho: selecione o nome acima e copie.'});
   const ol=mk('ol','ls-steps');
-  [['Entre no ','Discord do Alynva',' pelo botão abaixo.'],['Em um canal, digite ','/find',''],['Selecione ','Habbo BR',''],['Cole o nome da música (','Ctrl+V',' ou segure e cole no celular) e envie.']].forEach(([a,b,c])=>{const li=mk('li'),s=mk('span');s.append(a,mk('b',null,b),c);li.append(s);ol.append(li)});
-  const ac=mk('div','sh-a'),go=mki('a','hb pur',icon('i-head'),'Abrir Discord do Alynva');
-  go.href=ALYNVA;go.target='_blank';go.rel='noopener noreferrer';go.onclick=()=>setTimeout(closeSheet,400);
+  [['Entre no ','Discord do traxmachine.com',' pelo botão abaixo.'],['Em um canal, digite ','/find',''],['Selecione ','Habbo BR',''],['Cole o nome da música (','Ctrl+V',' ou segure e cole no celular) e envie.']].forEach(([a,b,c])=>{const li=mk('li'),s=mk('span');s.append(a,mk('b',null,b),c);li.append(s);ol.append(li)});
+  const ac=mk('div','sh-a'),go=mki('a','hb pur',icon('i-head'),'Abrir Discord do traxmachine.com');
+  go.href=TRAX_DISCORD;go.target='_blank';go.rel='noopener noreferrer';go.onclick=()=>setTimeout(closeSheet,400);
   ac.append(btn('hb','Copiar de novo',cp),go);
-  n.append(h,mk('p','note','Para ouvir, use o bot do servidor do Alynva:'),ol,ac,mk('div','tiny','Primeira vez? O Discord vai pedir para você entrar no servidor antes.'));
+  n.append(h,mk('p','note','Para ouvir, use o bot do servidor do traxmachine.com:'),ol,ac,mk('div','tiny','Primeira vez? O Discord vai pedir para você entrar no servidor antes.'));
   openSheet('Ouvir no Discord',n);cp();
 }
 // "HABBO" é o logo original; "MUSIC" é desenhado ao lado com as mesmas cores, contorno e sombra
@@ -1310,7 +1310,7 @@ function detail(a){
   const ba=mk('div','big-a'),ng=ib('hb dc','i-chat','Negociar no Discord',()=>negotiate(a));
   if(a.status==='vendido'){ng.disabled=true;ng.lastChild.textContent='Já foi vendido'}
   else if(a.mine){ng.disabled=true;ng.lastChild.textContent='Este anúncio é seu'}
-  ba.append(ng,ib('hb pur','i-head','Ouvir no Discord do Alynva',()=>listenSheet(a.cd,a.id)));r.append(ba);
+  ba.append(ng,ib('hb pur','i-head','Ouvir no Discord do traxmachine.com',()=>listenSheet(a.cd,a.id)));r.append(ba);
   const sf=mki('div','safe',icon('i-shield')),sx=mk('div');
   sx.append(mk('b',null,'Só feche a compra dentro do jogo, depois de ver o CD tocando no quarto'),' (assim você não cai em CD falso). O Habbo Music nunca pede sua senha, seu token nem para escanear QR code: se pedirem, é golpe.');
   sf.append(sx);r.append(sf);
