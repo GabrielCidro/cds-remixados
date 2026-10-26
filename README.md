@@ -7,7 +7,7 @@ Site: https://gabrielcidro.github.io/cds-remixados/
 Minha estante
 Adicionar CDs com nome, quantidade e valor pago (em créditos, c)
 Ajustar preço, quantidade e marcar se vendeu, direto no disco selecionado
-Ver o total gasto, o total vendido e o lucro, em créditos e em reais (50c = R$ 11,50)
+Ver o total gasto, o total vendido e o lucro, tudo em créditos do Habbo
 Anexar um áudio ou link da música e tocar "no quarto"
 Funciona sem login, salvando no navegador. Entrando com o Discord, a estante fica salva na conta e aparece em qualquer aparelho
 Backup e importação da lista

@@ -218,7 +218,8 @@ button{font-family:inherit}
 .pf{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:10px 12px;border:2px solid #9fd5a3;border-radius:9px;background:#e8f8e9;color:#1d6b26}
 .pf.neg{border-color:#efaaa2;background:#fdeceb;color:#a3261b}
 .pf small{display:block;font-size:12px;opacity:.85}
-.pv{font:700 22px Ubuntu,sans-serif}
+.pv{display:inline-flex;align-items:center;gap:6px;font:700 22px Ubuntu,sans-serif}
+.pv .coin{width:20px;height:20px}
 .pfr{text-align:right}
 .dact{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .dact .hb{flex:1 1 auto}
@@ -581,7 +582,6 @@ textarea.mono{font:12px ui-monospace,Menlo,monospace}
           <div class="hero-a">
             <button class="hb go" id="add" type="button">+ Novo CD</button>
             <button class="hb" id="bk" type="button">Backup</button>
-            <span class="rate"><svg class="ic coin" aria-hidden="true"><use href="#i-coin"/></svg>50c = R$ 11,50</span>
           </div>
           <button class="sync" id="sync" type="button"></button>
         </div>
@@ -595,9 +595,9 @@ textarea.mono{font:12px ui-monospace,Menlo,monospace}
       </div>
       <div class="stats">
         <div class="stat"><span class="si" style="--ib:#ffb6de"><svg class="ic" aria-hidden="true"><use href="#i-disc"/></svg></span><div><div class="k">Na estante</div><div class="v" id="cnt">0</div><div class="s" id="avg">&nbsp;</div></div></div>
-        <div class="stat"><span class="si" style="--ib:#ffe48a"><svg class="ic" aria-hidden="true"><use href="#i-coin"/></svg></span><div><div class="k">Total gasto</div><div class="v" id="tot">0c</div><div class="s" id="totbrl">= R$ 0,00</div></div></div>
-        <div class="stat"><span class="si" style="--ib:#c6f5b0"><svg class="ic" aria-hidden="true"><use href="#i-tag"/></svg></span><div><div class="k">Vendido</div><div class="v" id="rev">0c</div><div class="s" id="revbrl">= R$ 0,00</div></div></div>
-        <div class="stat"><span class="si" style="--ib:#b9e2ff"><svg class="ic" aria-hidden="true"><use href="#i-up"/></svg></span><div><div class="k">Lucro</div><div class="v" id="pf">0c</div><div class="s" id="pfbrl">= R$ 0,00</div></div></div>
+        <div class="stat"><span class="si" style="--ib:#ffe48a"><svg class="ic" aria-hidden="true"><use href="#i-coin"/></svg></span><div><div class="k">Total gasto</div><div class="v" id="tot">0c</div><div class="s" id="totbrl">&nbsp;</div></div></div>
+        <div class="stat"><span class="si" style="--ib:#c6f5b0"><svg class="ic" aria-hidden="true"><use href="#i-tag"/></svg></span><div><div class="k">Vendido</div><div class="v" id="rev">0c</div><div class="s" id="revbrl">&nbsp;</div></div></div>
+        <div class="stat"><span class="si" style="--ib:#b9e2ff"><svg class="ic" aria-hidden="true"><use href="#i-up"/></svg></span><div><div class="k">Lucro</div><div class="v" id="pf">0c</div><div class="s" id="pfbrl">&nbsp;</div></div></div>
       </div>
     </div>
     <section class="win" aria-label="Editor de discos">
@@ -755,13 +755,12 @@ logo();bulbs($('m-bulbs'));bulbs($('e-bulbs'));
 <script>
 /* ================= MINHA ESTANTE ================= */
 const EST=(()=>{
-const KEY='habbo-cds-v1',RATE=11.5/50;
+const KEY='habbo-cds-v1';
 let S={cds:[]},srt='new',q='',flt='all',sel=null,acct=null;
 try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&Array.isArray(d.cds))S=d}catch(e){}
 // salva sempre neste aparelho; quando a estante está ligada à conta, também manda para o Supabase
 let cloud=null;
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(cloud)cloud(S)};
-const brl=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const qn=e=>Math.max(1,parseInt(e.qty,10)||1);
 const sl=e=>{const v=parseFloat(e.sale);return isNaN(v)?NaN:v};
 const sn=e=>isNaN(sl(e))?0:Math.min(qn(e),Math.max(1,parseInt(e.sold,10)||1));
@@ -790,10 +789,10 @@ function stats(){
   const rv=S.cds.reduce((x,e)=>x+(sn(e)?sl(e)*sn(e):0),0),pf=S.cds.reduce((x,e)=>x+(sn(e)?prof(e):0),0);
   cu($('cnt'),have,v=>String(v));
   $('avg').textContent=bought?units+' unidades | médio '+f(tot/bought)+'c':' ';
-  cu($('tot'),tot,v=>f(v)+'c');$('totbrl').textContent='= '+brl(tot*RATE);
-  cu($('rev'),rv,v=>f(v)+'c');$('revbrl').textContent='= '+brl(rv*RATE);
+  cu($('tot'),tot,v=>f(v)+'c');$('totbrl').textContent=bought?'em '+bought+(bought===1?' unidade comprada':' unidades compradas'):' ';
+  const vu=S.cds.reduce((x,e)=>x+sn(e),0);cu($('rev'),rv,v=>f(v)+'c');$('revbrl').textContent=vu?vu+(vu===1?' unidade vendida':' unidades vendidas'):' ';
   const pe=$('pf');cu(pe,pf,v=>sg(v)+'c');pe.className='v '+(pf>0?'pos':pf<0?'neg':'');
-  $('pfbrl').textContent='= '+(pf<0?'-':'')+brl(Math.abs(pf)*RATE);
+  const pago=S.cds.reduce((x,e)=>x+(sn(e)?e.p*sn(e):0),0);$('pfbrl').textContent=vu?'recebi '+f(rv)+'c − paguei '+f(pago)+'c':' ';
   $('tc-all').textContent=S.cds.length;$('tc-own').textContent=have;$('tc-sold').textContent=S.cds.filter(e=>sn(e)>0).length;
   $('cnt2').textContent=S.cds.length+(S.cds.length===1?' CD':' CDs');
 }
@@ -820,7 +819,7 @@ function tile(e,i,anim){
 function renderList(anim){
   const ids=visible(),list=$('list');list.innerHTML='';
   const vt=ids.reduce((x,e)=>x+e.p*qn(e),0);
-  $('e-sum').textContent=(q||flt!=='all')?ids.length+(ids.length===1?' disco':' discos')+' | '+f(vt)+'c = '+brl(vt*RATE):'';
+  $('e-sum').textContent=(q||flt!=='all')?ids.length+(ids.length===1?' disco':' discos')+' | '+f(vt)+'c':'';
   if(!ids.length){
     const m=mk('div','empty');m.append(disc(0),mk('p',null,S.cds.length?'Nenhum disco encontrado.':'Nenhum CD ainda. Toque em "+ Novo CD" para colocar o primeiro na estante.'));
     list.append(m);return;
@@ -856,7 +855,7 @@ function pickView(){
   if(!S.cds.length)p.append(btn('hb go','+ Adicionar CD',()=>cdSheet()));
   w.append(p);
   const top=S.cds.filter(e=>prof(e)>0).sort((a,b)=>prof(b)-prof(a)).slice(0,4);
-  if(top.length){w.append(mk('div','plh','Top lucros'));top.forEach(e=>w.append(plRow(e,'lucro '+sg(prof(e))+'c = '+brl(prof(e)*RATE))))}
+  if(top.length){w.append(mk('div','plh','Top lucros'));top.forEach(e=>w.append(plRow(e,'lucro '+sg(prof(e))+'c')))}
   const rec=S.cds.filter(e=>held(e)>0).slice(-3).reverse();
   if(rec.length){w.append(mk('div','plh','Chegaram na estante'));rec.forEach(e=>w.append(plRow(e,'pago '+f(e.p)+'c'+(qn(e)>1?' | x'+qn(e):''))))}
   return w;
@@ -904,7 +903,7 @@ function renderDetail(anim){
   }
   function upd(){
     const k=qn(e),h=held(e),sd=sn(e);
-    R.pOut.innerHTML='';R.pOut.append('Total: ',mk('b',null,f(e.p*k)+'c'),' = '+brl(e.p*k*RATE)+(k>1?' ('+k+' unidades)':''));
+    R.pOut.innerHTML='';R.pOut.append('Total: ',mk('b',null,f(e.p*k)+'c'),k>1?' ('+k+' unidades)':'');
     const gold=sd>0&&h===0;R.dk.classList.toggle('gold',gold);
     R.pl.textContent=gold?'VENDIDO':sd?'VENDI '+sd+'/'+k:'NA ESTANTE';
     R.b1.setAttribute('aria-pressed',sd===0);R.b2.setAttribute('aria-pressed',sd>0);
@@ -913,8 +912,8 @@ function renderDetail(anim){
     if(R.pf){
       const l=prof(e),a=mk('div'),b=mk('div','pfr');
       R.pf.className='pf'+(l<0?' neg':'');R.pf.innerHTML='';
-      a.append(mk('small',null,l<0?'Prejuízo':'Lucro'),mk('span','pv',sg(l)+'c'));
-      b.append(mk('b',null,(l<0?'-':'')+brl(Math.abs(l)*RATE)),mk('small',null,'Recebi '+f(sl(e)*sd)+'c = '+brl(sl(e)*sd*RATE)),mk('small',null,h>0?'Restam '+h+' na estante':'Tudo vendido'));
+      a.append(mk('small',null,l<0?'Prejuízo em créditos':'Lucro em créditos'),mki('span','pv',coin(),sg(l)+'c'));
+      b.append(mk('b',null,'Recebi '+f(sl(e)*sd)+'c'),mk('small',null,'Paguei '+f(e.p*sd)+'c '+(sd===1?'nesse':'nesses '+sd)),mk('small',null,h>0?'Restam '+h+' na estante':'Tudo vendido'));
       R.pf.append(a,b);
     }
     if(R.an)R.an.disabled=h===0;
@@ -971,7 +970,7 @@ function cdSheet(e){
   const cur=mk('div',null,e&&e.aud?'Áudio atual: '+e.aud:'Nenhum áudio anexado.');
   fl.append(cur,fi);
   if(e&&e.aud)fl.append(btn('hb sm','Remover áudio',()=>{rem=true;fi.value='';cur.textContent='O áudio será removido ao salvar.'}));
-  const up=()=>{const p=parseFloat(pi.value),k=Math.max(1,parseInt(qi.value,10)||1);pv.textContent=isNaN(p)?'Informe o valor para ver o total.':'Total: '+f(p*k)+'c = '+brl(p*k*RATE)};
+  const up=()=>{const p=parseFloat(pi.value),k=Math.max(1,parseInt(qi.value,10)||1);pv.textContent=isNaN(p)?'Informe o valor para ver o total.':'Total: '+f(p*k)+'c'};
   const setQ=v=>{qi.value=Math.max(1,v);up()},setP=v=>{pi.value=Math.max(0,v);up()};
   qi.oninput=up;pi.oninput=up;
   const qc=chipRow([1,2,3,5],setQ),pc=chipRow(PRICE,setP);
