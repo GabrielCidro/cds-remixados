@@ -1,35 +1,33 @@
-Habbo Music (CDs Remixados)
+Habbo Music
 
-Depósito de CDs: um app simples para controlar os CDs remixados do Habbo, quanto foi gasto em cada um, quanto foi vendido e qual foi o lucro. O visual lembra o Habbo Hotel: estante de discos estilo inventário e painel no estilo do Playlist Editor.
+Fã-site da comunidade de CDs remixados do Habbo: uma estante para controlar seus CDs e um mural para anunciar e encontrar CDs à venda.
 
 Site: https://gabrielcidro.github.io/cds-remixados/
 
-O que dá para fazer
+Minha estante
 Adicionar CDs com nome, quantidade e valor pago (em créditos, c)
-Selecionar um disco na estante e ajustar ali mesmo o preço, a quantidade e o status (na estante ou vendido)
-Registrar a venda (valor de venda e quantas unidades foram vendidas) e ver o lucro na hora
-Ver o total gasto, o total vendido e o lucro, em créditos e em reais
-Buscar, filtrar (todos, na estante, vendidos) e ordenar (recentes, mais caros, mais baratos, A-Z, maior lucro)
-Anexar um áudio ou um link da música em cada CD e tocar "no quarto"
-Fazer backup e importar a lista
+Ajustar preço, quantidade e marcar se vendeu, direto no disco selecionado
+Ver o total gasto, o total vendido e o lucro, em créditos e em reais (50c = R$ 11,50)
+Anexar um áudio ou link da música e tocar "no quarto"
+Funciona sem login, salvando no navegador. Entrando com o Discord, a estante fica salva na conta e aparece em qualquer aparelho
+Backup e importação da lista
 
-A conversão usa 50c = R$ 11,50.
+Mural de CDs
+Anúncios só em créditos do Habbo, com nome do CD, DJ, preço e print do inventário
+Login com Discord; o nick do Habbo é confirmado por um código colocado na missão
+Botão Negociar abre o Discord de quem está vendendo; botão Ouvir leva ao Discord do Alynva (/find → Habbo BR → nome da música)
+Moderação aprova os prints (selo "CD verificado"), recebe denúncias, remove anúncios, bane contas e ajusta o limite de anúncios por pessoa (padrão 10 ativos)
+Nenhuma venda acontece no site: ele só mostra os anúncios e leva as pessoas até o Discord
 
-Onde ficam os dados
-
-Tudo fica salvo no navegador de quem usa, no próprio aparelho. Nada é enviado para servidor nenhum, então cada pessoa vê só a própria lista.
-
-Limpar os dados do navegador apaga a lista. Use o botão Backup de vez em quando.
-Para trocar de aparelho: no antigo, toque em Backup e copie o texto. No novo, toque em Backup, cole o texto e toque em Importar.
-Os áudios anexados não entram no backup. Anexe de novo no aparelho novo.
-Como rodar
-
-É um arquivo único. Baixe o index.html e abra no navegador. Não precisa instalar nada.
+Segurança
+O site nunca pede senha, token nem QR code
+Regras de acesso no banco (Row Level Security): cada pessoa só mexe na própria estante e nos próprios anúncios; moderação só para admin
+Limites contra spam, prints só em imagem até 5 MB, código da verificação guardado só no servidor
+Página "Privacidade e regras" e botão "Apagar minha conta"
 
 Tecnologias
-
-HTML, CSS e JavaScript puros, em um único arquivo (as imagens vão embutidas nele).
+HTML, CSS e JavaScript em um único arquivo (index.html), hospedado no GitHub Pages
+Supabase para login com Discord, banco de dados e prints. Os scripts do banco estão na pasta supabase/, na ordem de execução
 
 Aviso
-
 Projeto de fã, sem ligação com o Habbo ou com a Sulake. Habbo é marca registrada da Sulake Oy.
