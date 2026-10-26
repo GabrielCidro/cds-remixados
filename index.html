@@ -282,7 +282,7 @@ button{font-family:inherit}
 .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:12px}
 .step{padding:14px;border:1px solid #dcdad2;border-radius:10px;background:#f6f5f1}
 .step i{display:grid;place-items:center;width:34px;height:34px;margin-bottom:8px;border:2px solid #000;border-radius:8px;background:var(--gold);font:400 16px Bungee,sans-serif;font-style:normal;box-shadow:0 2px 0 #0005}
-.step b{display:block;margin-bottom:3px}
+.step>b{display:block;margin-bottom:3px}
 .step p{margin:0;color:#555;font-size:13px}
 
 /* ---------- meus anúncios / moderação ---------- */
@@ -389,6 +389,14 @@ textarea.mono{font:12px ui-monospace,Menlo,monospace}
 
 .foot{max-width:1180px;margin:8px auto 0;padding:0 16px;color:#8ea0c8;font-size:12.5px;text-align:center}
 .foot b{color:#d5e0f7}
+.credit{display:flex;align-items:flex-end;gap:12px;width:max-content;max-width:100%;margin:6px auto 14px;padding:10px 18px 10px 12px;border:2px solid #000;border-radius:12px;background:linear-gradient(#24406e,#1a2f55);box-shadow:inset 0 2px 0 #ffffff1f,0 6px 18px #0006;text-align:left}
+.cr-av{position:relative;display:block;width:50px;height:92px;flex:none}
+.cr-av::before{content:"";position:absolute;left:3px;right:3px;bottom:0;height:14px;border-radius:50%;background:radial-gradient(closest-side,#0009,transparent)}
+.cr-av img{position:absolute;left:50%;bottom:5px;transform:translateX(-50%);image-rendering:pixelated}
+.cr-t{display:grid;gap:1px;padding-bottom:10px}
+.cr-t small{color:#9fb4dc;font:400 10px var(--px);letter-spacing:.5px;text-transform:uppercase}
+.cr-t b{color:var(--gold);font:400 22px/1.1 Bungee,sans-serif;text-shadow:2px 2px 0 #000}
+.cr-t span{color:#8fa4cc;font-size:12px}
 .foot .link{color:var(--gold);font-size:12.5px}
 .priv h4{margin:16px 0 6px;font:700 10px var(--px);letter-spacing:.5px;text-transform:uppercase;color:#666}
 .priv h4:first-child{margin-top:0}
@@ -665,7 +673,12 @@ textarea.mono{font:12px ui-monospace,Menlo,monospace}
   </section>
 </main>
 
-<footer class="foot"><b>Habbo Music</b> · 2026 · Feito com &#9829; para colecionadores de CDs remixados. Fã-site não oficial: não é operado pela Sulake Oy nem afiliado ao Habbo Hotel®. Nenhuma venda acontece neste site. · <button class="link" type="button" id="privBtn">Privacidade e regras</button></footer>
+<footer class="foot">
+  <div class="credit">
+    <span class="cr-av"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAABVCAYAAADHV424AAAKJUlEQVR4nL2aXWgc1xXH/zOr3Vnt3qzQWCuPrA32Q2NH1pNrCdMkTUlSUvQSEtrapEgbWNEHO3lrqasXFz/YgkaFVNQSpUZF8kItu7ShYBlC4xLyUVS5Npi6iqEUG6/qsSWvUnl2pN21dPuwOld3vnZXstUDoxnN3L3/3z3n3K/ZBTZvPOC8ZVM3Kc7j8Tj8zk8CpNQLkEwmAQC6roubuVwOhUKhWr28Ho1aBTgAJZlMOlqo6zry+byn8Pz8/JZ0gh5yAIjH4ygUCiAvEIDbgoCSyaQMpiDAM0E5oQBALBZDMpmErutCnATz+bxDXC4DwAEuN8zPGnzucXcl+XzeIeDXcvm+HC43zPz8PMEIjwSGgzwQJOgWk+8Fwdm2TYns0PULh+gJ9GGKq23bsG3bU3mQsPt5LBaD1KXp8EBwEpPNJ74eQT9x+Z67znVTxB8ZYp1UWCwWExW4rwnY777b/CBojPFAAIAbZCsmQ/qZnBs1PbGdRiACIh6Pc+mB8MbY2Jj4UH9/PzgPnh4KhYIY4OSzX70ukArA6dOnOWOM79y5kwPgjDEej8fFeXJykp8/f57H43G+DizO7mu/Y3V6hK9Oj4iyUvkNiL179/JTp06JAo8ePRLH5OQkZ4zxyclJPjk5WVPQLUziQYfCGOO7du2Csh6ZdDqNwcFBmKYJzjkURQHnHFNTU8hkMiI8mUzGdwZdnR7x3AsdOoaJiQnxfzqdpksFAFQ5xpxzjI+Pg3MuABobGwXg2NgYMpmMR6SayQB9fX3o6+uT82pjsKLWKooCRVHQ3t4OwzDQ2NjoqZSAFMXZsVanRzxecAMoioLvvPZNKIqCmZkZUa6hUCgouVyOp1Iph5CiKFheXvaAuHsHCYcOHQv0RkdHBxRFweuvvuT7vAEACoWCMjc3x9vb24UQiS0vL/t6gnPuAJBbNjs7K8S7uroC4RwQAGBZlpLL5TiFxjRNIUYmXyuKIlo/MTGB2dlZ9PX1AYAQPnfuHLq7ux2AH135DDMzM+ju7gbWE9Oznrh3755HdGpqSghzznHx4kUAQCQSwdmzZwFsxPz1V18SQul0GlfHB9AlgZwCHAC+EJcuXfIkHSWt+x5ZtZgfeP5ZYEPY1xxTeaFQUPr7+z2FCCCTyaCnp0fcL5VKuH37dmDlZFfHBwD49yAPRDWQ/v5+9PT04MaNG7h8+TKWrryP1ekRnDhxwlFOjjkJkjeCLHApThMaGfWcubk5LF1531HW3TtkAEreq+MDOPD8s/jgwqf40S9+59Cuuh+Ix+OO8SOXy2Hmtz/Gvt07PWXlcYIArn95F0DFE3u+N4hvd30NZ3/6fSpbHwSBAJW8+O/HP8dvPvwMLx94zheE7IMLn+If/zbx56v/wu3fD/jBOnTr2YGBMQbLshwu9kswP7v+5V10vTMIoOIhPwi/fYcDQNd1RCIRAEDTaz8RMNVAZGESB4Bbd+7LddfedzDGAACWZcEwDHFN51ogbrt15z72Hz7p3slVpvJqAEBlwWqaJkqlkvAIY0wAhA4dk1tYE4DqWIfhgiQIAKgMzSsrK7BtW7QiEonAsiyHRwDgnxd+5gHYf/ikuNZ13dEY8oYHgoRKpRIYYyiVSlhZWUGpVEIikfCI5PP5uqZz8oJlWaJh5XIZ5XLZEQ4ub1xkj6iqilAohKWlJUQiEXFQ5aFDx0R45Bw5fvw4AMAwDEQiEZRKJZFXiURCaMie4JqmOZbkJEQuXFxcRLFYFIlKz2SvuI0xBsYYTNMUXZ0xhrW1NWiahsXFRW9ilkolcRA1wYTDYWiaBtM0xTOCoNcHFM53jx4FUOlJpmkim83CsiyxM5ND64CIxWJwJyaJkREIJSYBZLNZx2b4Gy++CADQNA0A0Nvbi1gsBlVVRWjIfAcreYyQP0DX4XDYAcgYQ29vr2iIbdv46+efA6jsuEKhUKXFqgrLsoS3isWi1xN+HqDQrKys+HqEvEIA0WjU4QkAiEajsG3b4Tm5vs28xxTeoCMcDiMcDiMWiwkAyh/yBIVI13Vks1lHXeVy2QtRLBZFy2WxcrkM27bFeOEGopbm83nxXPYE5QuFDKiSmKurqwJCNoopGbVOPqiV9FnyBFBJSl3XPUlP/weGQ07GIMtms6Jbyq0EnJ6gkdfd0ygxHb0jFouJOMmmaZrnjYvcI+h/Gogsy3J4gsQ1TRPCsrcdniAh99AsmzyTGobheYlKguQJSlpN00TXBhDcO2g0I0p3bgSZn6vJE9FoFNFoFOFw2JMTvhDUQqrYr3KCNU0Tpmkin8/DsiwxZpCRJ8hz7lES2OiiviOm3wcc5KoKTdMcvYYGKTI5J8jkOhOJBB4+fFipL6igHHsyTdMck5mqqohGo0gkEp4cIk+Ypom3jxypClSzi/qZDCYLDw0NecYJxhjOjI5ieHgY76zv2sn8eiKPxWJc13XOGHMcmqZxALy5uZkzxrhhGJwxxnVd57quc8Mw+LtHj4q3fgB4NpvlqKzUuK7rvi/M1tZfqAWGQ26pe8SUvfH2kSMYGhrCmdFRh4fcOWEYhlgM/XrgB45nMoRi27Zwkd84USwWxTrxu2+9heHhYZwZHRXDciQSESDyiOnuZS8feC4QwuMBstXVVc9zEmeMOVbhZG5P0BIPADoOn8Ta9IjYKnggQqGQGNmqdVVaO8omT37uucM0TbS1tYl7t+7cR0dlO6C4xwnFtm0uT7M0lctC8jMZVt5TyOsJAA4A8gaC3vJfHR8Q+0jDMMSqir7XUFXVAwA416LyNYkvLCwAEN2y6q6cr0n7BtW1mZGXb36TG8Xc3WrZ1l/M1b0rhxvI/R2Y26qJVzPf3kEeuH7rrrhHfbupqUkcyWQSyWQSbW1tDgD5NeSWIGThg+lBce+HbzpfD0YiETQ0NKChwd+Zjx8/3jKEIgu7YQCgoaFBAAAbCfck5hcOxQ9GPXQMzc3NjoILCwtoaWnZFggZBgfTg/j7xMbLr6WlJXz11VdPDQCo0TuASiIeTA+KUTSRSEBV1cBc2BYIAqFBajus7pr91pr/d4jttLohgpbrT8Pqzi7aXW3Vqo2iTy/Fa4inOl8AAORufrF1iM16gX74QeLX/vIhcrkc3uh7D7mbXzh+0vLUw0Etb9ndiShrwp/O/QoA8PVX3gyC8bxMdRtvamoCUNksM8agqqrvYCXHvONbh/FoIYdd+7rxn1uVL2MI5o2+9wAAu/ZVvhP72x9+WdcvzjgAMW+4Ifxi3rK7E8k9nXhmx8b0TjAkDgCPHt7D7CcX6v/ZG13s2LEDqqrWijkA+MKQ+PztmwCAhTs368+JVOcLeKYlhdlPLgiBOmIOAEJQto/+eA6pVAqtra31e6JldycAILmnct5MzB88eIBcLodUKiXOra2tVHfNxBQQ165dQyqVwv7uVwRMvTEPsPq/iJNBAKAWDInLMa+lsxmIqjBuk2O+HRC+MNViXquiJ4FwwDxJ3f8D/qzIOvgHCrEAAAAASUVORK5CYII=" width="33" height="85" alt="Avatar do Yarukii no Habbo"></span>
+    <span class="cr-t"><small>Site criado pelo</small><b>Yarukii</b><span>Habbo.com.br</span></span>
+  </div>
+  <b>Habbo Music</b> · 2026 · Feito com &#9829; para colecionadores de CDs remixados. Fã-site não oficial: não é operado pela Sulake Oy nem afiliado ao Habbo Hotel®. Nenhuma venda acontece neste site. · <button class="link" type="button" id="privBtn">Privacidade e regras</button></footer>
 
 <nav class="tabbar" aria-label="Páginas">
   <button type="button" data-go="mural"><svg class="ic" aria-hidden="true"><use href="#i-store"/></svg>Mural</button>
@@ -726,7 +739,7 @@ function copyText(t){
   });
 }
 // Ouvir: copia o nome e explica como achar a música no bot do Discord do traxmachine.com
-const TRAX_DISCORD='https://discord.gg/TDDrdxGt5';
+const TRAX_DISCORD='https://discord.gg/ukW2qFz2uN';
 function listenSheet(name,seed){
   const n=mk('div'),h=mk('div','ls-h'),t=mk('div'),st=mk('div','ls-ok');
   t.append(mk('b',null,name),st);h.append(disc(seed||0),t);
@@ -1049,7 +1062,7 @@ const SB_URL='https://kyrcejahvepkcbgmmlzk.supabase.co',SB_KEY='sb_publishable_G
 const sb=window.supabase?window.supabase.createClient(SB_URL,SB_KEY,{auth:{flowType:'pkce',persistSession:true,detectSessionInUrl:true}}):null;
 const HOTELS=['com.br','com','es','fr','de','it','nl','fi','com.tr'];
 const SEL='id,user_id,cd,dj,price,qty,note,print_path,status,cd_ok,rejected,created_at,profiles(habbo_nick,habbo_hotel,discord_id,discord_user,discord_name,avatar_url,nick_verified)';
-let ADS=[],PENDING=[],REPORTS=[],me=null,curUid,view=null,cat='all',djF=null,q='',srt='new',loaded=false,loadErr=null;
+let ADS=[],PENDING=[],REPORTS=[],me=null,curUid,pendingView=null,view=null,cat='all',djF=null,q='',srt='new',loaded=false,loadErr=null;
 const ageMin=d=>(Date.now()-new Date(d))/60000;
 const ago=d=>{const m=Math.max(0,Math.round(ageMin(d)));return m<1?'agora':m<60?'há '+m+' min':m<1440?'há '+Math.round(m/60)+' h':'há '+Math.round(m/1440)+(m<2880?' dia':' dias')};
 const errMsg=e=>(e&&(e.message||e.error_description))||'Algo deu errado. Tente de novo.';
@@ -1171,6 +1184,8 @@ async function onSession(session){
   await loadAds();
   if(me.admin)loadMod();
   await syncEstante();
+  // link direto (ex.: #mod vindo do aviso no Discord): abre a aba depois do login
+  if(pendingView){const v=pendingView;pendingView=null;if(v!=='mod'||me.admin)go(v)}
   runIntent();
 }
 function authUI(){
@@ -1553,6 +1568,7 @@ const qs=new URLSearchParams(location.search);
 if(qs.get('error_description'))setTimeout(()=>toast('Login não concluído: '+qs.get('error_description')),300);
 authUI();EST.setAccount(null);renderAll();
 const h0=location.hash.slice(1);
+pendingView=h0==='meus'||h0==='mod'?h0:null;
 // quem já usa a estante continua caindo nela; quem é novo cai no mural
 go(VIEWS.includes(h0)&&h0!=='meus'&&h0!=='mod'?h0:(EST.count()?'estante':'mural'),true);
 if(sb){
