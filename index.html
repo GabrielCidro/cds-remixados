@@ -21,7 +21,7 @@
 <meta name="twitter:description" content="Controle sua coleção de CDs remixados do Habbo e anuncie, encontre e ouça CDs da comunidade. Tudo em créditos, negociado pelo Discord.">
 <meta name="twitter:image" content="https://gabrielcidro.github.io/cds-remixados/social.png">
 <meta name="theme-color" content="#0a1328">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob:; connect-src 'self' https://kyrcejahvepkcbgmmlzk.supabase.co wss://kyrcejahvepkcbgmmlzk.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.jsdelivr.net; worker-src blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob:; connect-src 'self' https://kyrcejahvepkcbgmmlzk.supabase.co wss://kyrcejahvepkcbgmmlzk.supabase.co https://cdn.jsdelivr.net data:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10.5' fill='%23ff7cc6' stroke='%236e0f47' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='6.5' fill='none' stroke='%23ffc2e4' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='2.5' fill='%23fff' stroke='%236e0f47' stroke-width='1.2'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -398,6 +398,12 @@ textarea.mono{font:12px ui-monospace,Menlo,monospace}
 .mq .blist li{display:flex;justify-content:space-between;gap:8px}
 .ph-r{gap:6px}
 .drop.over{border-color:var(--sel-b);background:var(--sel)}
+.drop.mini{min-height:0;margin-bottom:12px;padding:10px 12px;gap:4px;font-size:13px}
+.drop.mini b{margin-left:6px}
+.drop .ot{color:#555}
+.ocrl{margin-top:6px;color:#666;font:700 12px Ubuntu,sans-serif}
+.ocrl.ok{color:#1d6b26}
+.ocrl.warn{color:#b35a00}
 .checks{display:grid;gap:6px;margin-top:10px;font-size:13.5px}
 .checks label{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
 .checks input{width:18px;height:18px;margin:0;flex:none;accent-color:var(--ok)}
@@ -1105,7 +1111,7 @@ const SB_URL='https://kyrcejahvepkcbgmmlzk.supabase.co',SB_KEY='sb_publishable_G
 const sb=window.supabase?window.supabase.createClient(SB_URL,SB_KEY,{auth:{flowType:'pkce',persistSession:true,detectSessionInUrl:true}}):null;
 const HOTELS=['com.br','com','es','fr','de','it','nl','fi','com.tr'];
 const SEL='id,user_id,cd,dj,price,qty,note,print_path,status,cd_ok,rejected,created_at,profiles(habbo_nick,habbo_hotel,discord_id,discord_user,discord_name,avatar_url,nick_verified)';
-let ADS=[],PENDING=[],REPORTS=[],VIS=null,me=null,curUid,pendingView=null,view=null,cat='all',djF=null,q='',srt='new',loaded=false,loadErr=null;
+const OCRC={};let ADS=[],PENDING=[],REPORTS=[],VIS=null,me=null,curUid,pendingView=null,view=null,cat='all',djF=null,q='',srt='new',loaded=false,loadErr=null;
 const ageMin=d=>(Date.now()-new Date(d))/60000;
 const ago=d=>{const m=Math.max(0,Math.round(ageMin(d)));return m<1?'agora':m<60?'há '+m+' min':m<1440?'há '+Math.round(m/60)+' h':'há '+Math.round(m/1440)+(m<2880?' dia':' dias')};
 const errMsg=e=>(e&&(e.message||e.error_description))||'Algo deu errado. Tente de novo.';
@@ -1261,6 +1267,7 @@ function privSheet(){
     'Seus anúncios, os prints que você envia e as denúncias que você faz.'
   ]);
   sec('Contagem de visitas',['O site conta quantas vezes foi aberto por dia e de quantos aparelhos, só como número. Não guarda IP, nome nem cookie de rastreamento.']);
+  sec('Leitura dos prints',['Quando você cola um print, o texto é lido no seu próprio navegador para preencher o nome e o DJ. A imagem só é enviada quando você publica o anúncio.']);
   sec('O que fica público',['Os anúncios: nome do CD, DJ, preço, print, seu nick do Habbo e seu nome e avatar do Discord, para as pessoas poderem negociar com você.']);
   sec('O que nunca guardamos',['Sua senha, seu token ou suas conversas do Discord.','Os áudios anexados na estante: eles ficam só no seu aparelho.']);
   sec('Regras do mural',[
@@ -1460,7 +1467,23 @@ function wizard(step,d){
     const g2=mk('div','grid2'),b1=mk('div'),b2=mk('div'),pl=mk('div','lab','Preço');pl.append(mk('span',null,'só em créditos'));
     b1.append(pl,cw);b2.append(mk('div','lab','Quantidade'),qt);g2.append(b1,b2);
     const ol=mk('div','lab','Observação');ol.append(mk('span',null,'opcional'));
-    n.append(g,g2,pc,ol,nt,msg);
+    const oz=mk('label','drop mini'),ofi=mk('input'),ot=mk('span','ot','O site lê o nome e o DJ sozinho, e o print já fica de verificação.');
+    ofi.type='file';ofi.accept='image/png,image/jpeg,image/webp';ofi.hidden=true;
+    oz.append(ofi,mki('span',null,icon('i-plus')+'<b>Cole o print da janelinha do CD (Ctrl+V)</b>'),ot);
+    const take=async l=>{
+      const x=l[0];if(!x)return;
+      if(!/^image\/(png|jpeg|webp)$/.test(x.type)){ot.textContent='Envie uma imagem PNG, JPG ou WebP.';return}
+      if(x.size>5*1024*1024){ot.textContent='Imagem muito grande (máximo 5 MB).';return}
+      d.file=x;d.preview=await readUrl(x);ot.textContent='Lendo o print...';
+      try{
+        const r=await OCR.panel(x);
+        if(!r){ot.textContent='Não consegui ler este print: preencha à mão. Ele já ficou guardado para o passo 3.';return}
+        nm.value=r.cd;dj.value=r.dj;ot.textContent='Li "'+r.cd+'", DJ '+r.dj+'. Confira e corrija se precisar.';
+        if(me.nickOk&&!near(r.owner,me.nick))ot.textContent+=' Atenção: o dono no print parece ser '+r.owner+', não '+me.nick+'.';
+      }catch(e){ot.textContent='Não consegui abrir o leitor agora: preencha à mão. O print já ficou guardado para o passo 3.'}
+    };
+    ofi.onchange=()=>take([...ofi.files]);onPrint(oz,take);
+    n.append(oz,g,g2,pc,ol,nt,msg);
     ac.append(btn('hb','Cancelar',closeSheet),btn('hb go','Continuar',()=>{
       const v={cd:nm.value.trim(),dj:dj.value.trim(),price:parseInt(pr.value,10),qty:Math.min(99,Math.max(1,parseInt(qt.value,10)||1)),note:nt.value.trim()};
       if(!v.cd){msg.textContent='Coloque o nome do CD.';nm.focus();return}
@@ -1509,6 +1532,69 @@ function wizard(step,d){
     ac.append(btn('hb','Voltar',()=>wizard(3,d)),pb);
   }
   n.append(ac);openSheet('Anunciar CD',n);
+}
+
+/* ---------- leitor de prints: lê a janelinha do CD do Habbo ---------- */
+// roda só no navegador (tesseract.js); o print não vai para lugar nenhum para ser lido
+const OCR=(()=>{
+  const LIB='https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js',SRI='sha384-r1ru3tcf6FhnCFR4B7pIFG+BhFF9LlFtz/P1y4pblWn3AGs9y3lBx5SKLNf4+rED';
+  let wkP=null,queue=Promise.resolve();
+  function worker(){
+    if(!wkP)wkP=(async()=>{
+      if(!window.Tesseract)await new Promise((res,rej)=>{const s=document.createElement('script');s.src=LIB;s.integrity=SRI;s.crossOrigin='anonymous';s.onload=res;s.onerror=()=>rej(new Error('lib'));document.head.append(s)});
+      const w=await Tesseract.createWorker('eng',1,{workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/worker.min.js',corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@6.0.0',langPath:'https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng/4.0.0_best_int'});
+      await w.setParameters({tessedit_pageseg_mode:'7'});return w;
+    })().catch(e=>{wkP=null;throw e});
+    return wkP;
+  }
+  // texto do Habbo: claro e sem cor (os ícones são coloridos ou ficam antes de um buraco)
+  async function lines(src,maxLines){
+    const bm=await createImageBitmap(src),W=bm.width,H=bm.height;
+    const c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');g.drawImage(bm,0,0);bm.close&&bm.close();
+    const P=g.getImageData(0,0,W,H).data,on=(x,y)=>{const i=(y*W+x)*4,r=P[i],gg=P[i+1],b=P[i+2];return r*.3+gg*.59+b*.11>150&&Math.max(r,gg,b)-Math.min(r,gg,b)<45};
+    const bands=[];let s=-1;
+    for(let y=0;y<=H;y++){let v=false;if(y<H)for(let x=0;x<W;x++)if(on(x,y)){v=true;break}if(v&&s<0)s=y;if(!v&&s>=0){if(y-s>=5&&y-s<=24)bands.push([s,y]);s=-1}}
+    if(!bands.length||bands.length>maxLines)return null;
+    const w=await worker(),out=[];
+    for(const [a,b] of bands){
+      const col=[];for(let x=0;x<W;x++){let v=0;for(let y=a;y<b;y++)if(on(x,y)){v=1;break}col.push(v)}
+      let pcs=[];s=-1;for(let x=0;x<=W;x++){const v=x<W&&col[x];if(v&&s<0)s=x;if(!v&&s>=0){pcs.push([s,x]);s=-1}}
+      // ícone na frente (estreito, antes de um buraco grande) e botão de fechar no fim
+      for(let i=1;i<pcs.length;i++)if(pcs[i][0]-pcs[i-1][1]>=7&&pcs[i-1][1]-pcs[0][0]<24){pcs=pcs.slice(i);break}
+      for(let i=pcs.length-1;i>0;i--)if(pcs[i][0]-pcs[i-1][1]>=10&&pcs[pcs.length-1][1]-pcs[i][0]<14){pcs=pcs.slice(0,i);break}
+      // pontos e dois-pontos a gente mesmo reconhece; o resto vai para o leitor, palavra por palavra
+      const kind=([x0,x1])=>{let t=b,u=a;for(let x=x0;x<x1;x++)for(let y=a;y<b;y++)if(on(x,y)){t=Math.min(t,y);u=Math.max(u,y)}
+        if(x1-x0>2)return null;if(u-t<=1&&u>=b-3)return '.';
+        if(u-t>=4){for(let y=t+2;y<u-1;y++)if(on(x0,y))return null;return ':'}return null};
+      let txt='',cur=[],prev=null;
+      const flush=async()=>{
+        if(!cur.length)return;const x0=cur[0][0],x1=cur[cur.length-1][1],k=6,xs=[];let X=24;
+        for(let x=x0;x<x1;x++){xs.push(X);X+=k*(col[x]?1:2)}
+        const cv=document.createElement('canvas');cv.width=X+24;cv.height=(b-a)*k+84;const cg=cv.getContext('2d');
+        cg.fillStyle='#fff';cg.fillRect(0,0,cv.width,cv.height);cg.fillStyle='#000';
+        for(let y=Math.max(0,a-3);y<Math.min(H,b+3);y++)for(let x=x0;x<x1;x++)if(on(x,y))cg.fillRect(xs[x-x0],42+(y-a)*k,k,k);
+        const r=await w.recognize(cv);txt+=r.data.text.trim();cur=[];
+      };
+      for(const p of pcs){const k=kind(p);if(k){await flush();txt+=k}else{if(prev&&p[0]-prev[1]>=3&&cur.length){await flush();txt+=' '}cur.push(p)}prev=p}
+      await flush();
+      txt=txt.replace(/\s+/g,' ').trim();if(txt)out.push(txt);
+    }
+    return out;
+  }
+  // um de cada vez, para não abrir vários leitores
+  const run=(src,max)=>{const p=queue.then(()=>lines(src,max));queue=p.catch(()=>{});return p};
+  return{
+    // janelinha do CD: 1ª linha o nome, depois o dono, ..., e por último quem fez (o DJ)
+    async panel(src){const l=await run(src,8);if(!l||l.length<3)return null;return{cd:l[0].slice(0,60),owner:l[1],dj:l[l.length-1].slice(0,40)}},
+    all:src=>run(src,60)
+  };
+})();
+const norm=s=>(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+function near(a,b){
+  a=norm(a);b=norm(b);if(!a||!b)return false;if(a===b)return true;
+  const m=a.length,n=b.length,d=Array.from({length:m+1},(_,i)=>[i]);for(let j=1;j<=n;j++)d[0][j]=j;
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+  return d[m][n]<=Math.max(1,Math.floor(Math.max(m,n)/5));
 }
 
 /* ---------- anunciar vários CDs de uma vez ---------- */
@@ -1596,7 +1682,27 @@ function bulkWizard(step,d){
     const g2=mk('div','grid2'),b1=mk('div'),b2=mk('div'),ol=mk('div','lab','Observação');ol.append(mk('span',null,'opcional'));
     b1.append(mk('div','lab','Quantidade de cada'),qt);b2.append(ol,nt);g2.append(b1,b2);
     const ll=mk('div','lab','Lista de CDs');ll.append(mk('span',null,'um por linha'));
-    n.append(ll,ta,cnt,g,pc,g2,msg);upd();
+    d.files=d.files||[];
+    const oz=mk('label','drop mini'),ofi=mk('input'),ot=mk('span','ot','Cole os prints das janelinhas, um por CD: cada um vira uma linha com nome e DJ.');
+    ofi.type='file';ofi.accept='image/png,image/jpeg,image/webp';ofi.multiple=true;ofi.hidden=true;
+    oz.append(ofi,mki('span',null,icon('i-plus')+'<b>Cole os prints dos CDs (Ctrl+V)</b>'),ot);
+    const take=async list=>{
+      let ok=0,bad=0;const warn=[];
+      for(const x of list){
+        if(d.files.length>=20){ot.textContent='No máximo 20 prints.';break}
+        if(!/^image\/(png|jpeg|webp)$/.test(x.type)||x.size>5*1024*1024){bad++;continue}
+        d.files.push({file:x,url:await readUrl(x)});ot.textContent='Lendo o print '+d.files.length+'...';
+        let r=null;try{r=await OCR.panel(x)}catch(e){}
+        if(!r){bad++;continue}
+        ta.value=(ta.value.trim()?ta.value.trim()+'\n':'')+r.cd+(r.dj?' - '+r.dj:'');ok++;upd();
+        if(me.nickOk&&!near(r.owner,me.nick))warn.push(r.owner);
+      }
+      ot.textContent=(ok?ok+(ok===1?' CD lido e colocado na lista':' CDs lidos e colocados na lista'):'')+(bad?(ok?'; ':'')+bad+' print(s) não deu para ler: escreva esses à mão':'')+'. '+d.files.length+' print(s) guardados para o passo 2.'+(warn.length?' Atenção: em algum print o dono parece ser '+warn[0]+', não '+me.nick+'.':'');
+      fi2.textContent=d.files.length?d.files.length+' print(s) guardados':'';
+    };
+    const fi2=mk('div','tiny',d.files.length?d.files.length+' print(s) guardados':'');
+    ofi.onchange=()=>take([...ofi.files]);onPrint(oz,take);
+    n.append(oz,fi2,ll,ta,cnt,g,pc,g2,msg);upd();
     ac.append(btn('hb','Cancelar',closeSheet),btn('hb go','Continuar',()=>{
       const v={text:ta.value,dj:dj.value.trim(),price:parseInt(pr.value,10),qty:Math.min(99,Math.max(1,parseInt(qt.value,10)||1)),note:nt.value.trim()};
       const p=parseList(v.text,v.dj);
@@ -1612,13 +1718,13 @@ function bulkWizard(step,d){
   if(step===2){
     d.files=d.files||[];
     const fi=mk('input');fi.type='file';fi.accept='image/png,image/jpeg,image/webp';fi.multiple=true;fi.hidden=true;
-    const dr=mk('label','drop');dr.append(fi,mki('span',null,icon('i-plus')+'<br>Cole o print aqui (Ctrl+V)'),mk('span',null,'Ou clique para escolher o arquivo. Até 6 imagens PNG, JPG ou WebP, até 5 MB cada. Juntamos tudo numa imagem só.'));
+    const dr=mk('label','drop');dr.append(fi,mki('span',null,icon('i-plus')+'<br>Cole o print aqui (Ctrl+V)'),mk('span',null,'Ou clique para escolher o arquivo. Até 20 imagens PNG, JPG ou WebP, até 5 MB cada. Juntamos tudo numa imagem só.'));
     const th=mk('div','thumbs');
     const show=()=>{th.innerHTML='';d.files.forEach((x,i)=>{const b=mk('div'),im=mk('img'),rm=btn('x','×',e=>{e.preventDefault();d.files.splice(i,1);show()});im.src=x.url;im.alt='Print '+(i+1);rm.setAttribute('aria-label','Tirar print '+(i+1));b.append(im,rm);th.append(b)});th.hidden=!d.files.length};
     const add=async list=>{
       msg.textContent='';
       for(const x of list){
-        if(d.files.length>=6){msg.textContent='No máximo 6 prints.';break}
+        if(d.files.length>=20){msg.textContent='No máximo 20 prints.';break}
         if(!/^image\/(png|jpeg|webp)$/.test(x.type)){msg.textContent='Envie só imagens PNG, JPG ou WebP.';continue}
         if(x.size>5*1024*1024){msg.textContent='Uma imagem passou de 5 MB e ficou de fora.';continue}
         d.files.push({file:x,url:await readUrl(x)});
@@ -1728,6 +1834,16 @@ function renderMod(){
       g.forEach(x=>{const li=mk('li');li.append(mk('span',null,x.cd+' · '+x.dj),btn('link','Recusar este',()=>{const why=prompt('Motivo da recusa de "'+x.cd+'" (o vendedor vê):','Este CD não aparece no print');if(why!==null)modCall('mod_print',{p_id:x.id,p_ok:false,p_motivo:why.slice(0,200)||'Print recusado'},'"'+x.cd+'" recusado')}));bl.append(li)});
       t.append(bl);
     }
+    const oc=mk('div','ocrl','Lendo o print...');t.append(oc);
+    if(a.print){
+      OCRC[a.path]=OCRC[a.path]||fetch(a.print).then(r=>r.blob()).then(b=>OCR.all(b));
+      OCRC[a.path].then(l=>{
+        if(!l){oc.textContent='Leitura automática: não deu para ler este print, confira no olho.';return}
+        const nk=l.some(x=>near(x,a.seller.nick)),fd=g.filter(x=>l.some(y=>near(y,x.cd))).length;
+        oc.textContent='Leitura automática: nick '+a.seller.nick+(nk?' encontrado':' não encontrado')+' · '+fd+' de '+g.length+(g.length===1?' CD encontrado':' CDs encontrados')+'. Confira mesmo assim.';
+        oc.classList.add(nk&&fd===g.length?'ok':'warn');
+      },()=>{oc.textContent='Leitura automática indisponível agora.'});
+    }else oc.remove();
     const ul=mk('ul');[many?'Todos os CDs da lista aparecem no inventário?':'O CD "'+a.cd+'" aparece no inventário?','O nick '+a.seller.nick+' aparece no print?','O print não parece editado ou repetido?'].forEach(x=>ul.append(mk('li',null,x)));t.append(ul);
     const ac=mk('div','acts');
     if(many){
